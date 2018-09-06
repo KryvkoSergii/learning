@@ -1,10 +1,12 @@
 package ua.ksa.core.web;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.ksa.core.dao.UserRepository;
 import ua.ksa.core.model.User;
+
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -21,14 +23,14 @@ public class UserController {
 
     @GetMapping(path = URL)
     public ResponseEntity getUser(@PathVariable(name = "id", required = false) Long id) {
-        if(Objects.nonNull(id)) return ResponseEntity.ok(users.findById(id));
+        if (Objects.nonNull(id)) return ResponseEntity.ok(users.findById(id));
         return ResponseEntity.ok(StreamSupport
                 .stream(users.findAll().spliterator(), false)
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(path = URL)
-    public ResponseEntity<User> saveUser(@RequestBody User user){
+    @PostMapping(path = URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         return ResponseEntity.ok(users.save(user));
     }
 
